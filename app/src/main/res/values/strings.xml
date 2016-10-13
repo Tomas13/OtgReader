@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">OtgReader</string>
+    <string name="enter_summ">Введите сумму</string>
+    <string name="add_summ">Подарить</string>
+    <string name="minus_summ">Снять</string>
+    <string name="read_summ">Считанная сумма</string>
+    <string name="btn_scan">сканировать</string>
+</resources>
