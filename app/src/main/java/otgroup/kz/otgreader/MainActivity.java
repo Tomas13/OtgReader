@@ -12,6 +12,8 @@ import android.widget.Toast;
 import com.google.zxing.Result;
 import com.google.zxing.qrcode.encoder.QRCode;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -24,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.text_view_read)
     TextView textViewRead;
 
+    @BindView(R.id.text_view_balance)
+    TextView textViewBalance;
+
     @BindView(R.id.edit_text_summ)
     EditText editTextSumm;
 
@@ -33,22 +38,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.btn_generate_qr_positive)
-    public void generatePositive(View view){
+    public void generatePositive(View view) {
         Intent intent = new Intent(this, QrResultActivity.class);
-        String fromThis = "+" + editTextSumm.getText();
+
+        String timeStamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + "";
+        String fromThis = "+" + editTextSumm.getText() + "&" + timeStamp;
         intent.putExtra("QrBitmap", net.glxn.qrgen.android.QRCode.from(fromThis).bitmap());
+        intent.putExtra("Summ", "+" + editTextSumm.getText());
         startActivity(intent);
     }
 
 
     @OnClick(R.id.btn_generate_qr_negative)
-    public void generateNegative(View view){
+    public void generateNegative(View view) {
         Intent intent = new Intent(this, QrResultActivity.class);
-        String fromThis = "-" + editTextSumm.getText();
+
+        String timeStamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + "";
+        String fromThis = "-" + editTextSumm.getText() + "&" + timeStamp;
         intent.putExtra("QrBitmap", net.glxn.qrgen.android.QRCode.from(fromThis).bitmap());
+        intent.putExtra("Summ", "-" + editTextSumm.getText());
         startActivity(intent);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +75,24 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // The user picked a contact.
                 // The Intent's data Uri identifies which contact was selected.
-                textViewRead.setText(data.getExtras().get("summ").toString());
-                // Do something with the contact here (bigger example below)
+
+                String resultString = data.getExtras().get("summ").toString();
+
+                String[] resultArray = resultString.split("&");
+
+                String number = resultArray[0];
+                String sign = resultArray[1];
+
+                int current;
+                if (sign.equals("plus")) {
+                    current = Integer.parseInt(number);
+                }else{
+                    current = -Integer.parseInt(number);
+                }
+                textViewRead.setText(String.valueOf(current));
+                textViewBalance.setText(R.string.balance + String.valueOf(current));
+
+//                "2000&plus&sdf";
             }
         }
     }

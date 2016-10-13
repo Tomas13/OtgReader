@@ -11,9 +11,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="otgroup.kz.otgreader.MainActivity">
 
+    <TextView
+        android:id="@+id/text_view_balance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/balance"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/colorAccent"
+        android:textSize="16sp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
         android:orientation="vertical"
         android:weightSum="2">
 
@@ -27,14 +37,14 @@
                 android:id="@+id/edit_text_summ"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:textSize="20sp"
+                android:hint="@string/enter_summ"
+                android:inputType="numberDecimal"
                 android:textAlignment="center"
-                android:hint="@string/enter_summ"/>
+                android:textSize="20sp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/edit_text_summ"
                 android:orientation="horizontal"
                 android:padding="2dp"
                 android:weightSum="2">
@@ -64,11 +74,12 @@
 
             <TextView
                 android:id="@+id/text_view_read"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:textSize="20sp"
+                android:layout_gravity="center"
+                android:hint="@string/read_summ"
                 android:textAlignment="center"
-                android:hint="@string/read_summ"/>
+                android:textSize="20sp"/>
 
             <Button
                 android:id="@+id/btn_scan"
