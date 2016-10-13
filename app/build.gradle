@@ -31,4 +31,8 @@ dependencies {
 
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
+
+    //qr code generator
+    compile 'com.github.kenglxn.QRGen:javase:2.2.0'
+    compile 'com.github.kenglxn.QRGen:android:2.2.0'
 }

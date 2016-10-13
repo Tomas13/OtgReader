@@ -27,6 +27,8 @@
                 android:id="@+id/edit_text_summ"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:textSize="20sp"
+                android:textAlignment="center"
                 android:hint="@string/enter_summ"/>
 
             <LinearLayout
@@ -38,12 +40,14 @@
                 android:weightSum="2">
 
                 <Button
+                    android:id="@+id/btn_generate_qr_positive"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
                     android:text="@string/add_summ"/>
 
                 <Button
+                    android:id="@+id/btn_generate_qr_negative"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
@@ -62,6 +66,8 @@
                 android:id="@+id/text_view_read"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:textSize="20sp"
+                android:textAlignment="center"
                 android:hint="@string/read_summ"/>
 
             <Button
