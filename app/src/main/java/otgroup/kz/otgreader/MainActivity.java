@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     String TAG = "MainAc";
     static final int SCAN_QR_REQUEST = 1;  // The request code
 
+    private int balance = 1000;
+
     @BindView(R.id.text_view_read)
     TextView textViewRead;
 
@@ -42,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, QrResultActivity.class);
 
         String timeStamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + "";
-        String fromThis = "+" + editTextSumm.getText() + "&" + timeStamp;
+        String fromThis = editTextSumm.getText() + "&plus&" + timeStamp;
         intent.putExtra("QrBitmap", net.glxn.qrgen.android.QRCode.from(fromThis).bitmap());
-        intent.putExtra("Summ", "+" + editTextSumm.getText());
+        intent.putExtra("Summ", editTextSumm.getText() + "&plus&");
         startActivity(intent);
     }
 
@@ -54,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, QrResultActivity.class);
 
         String timeStamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + "";
-        String fromThis = "-" + editTextSumm.getText() + "&" + timeStamp;
+        String fromThis = editTextSumm.getText() + "&minus&"  + timeStamp;
         intent.putExtra("QrBitmap", net.glxn.qrgen.android.QRCode.from(fromThis).bitmap());
-        intent.putExtra("Summ", "-" + editTextSumm.getText());
+        intent.putExtra("Summ", editTextSumm.getText() + "&minus&");
         startActivity(intent);
     }
 
@@ -65,6 +67,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        textViewBalance.append(" " + balance);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -73,8 +81,6 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == SCAN_QR_REQUEST) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                // The user picked a contact.
-                // The Intent's data Uri identifies which contact was selected.
 
                 String resultString = data.getExtras().get("summ").toString();
 
@@ -86,13 +92,17 @@ public class MainActivity extends AppCompatActivity {
                 int current;
                 if (sign.equals("plus")) {
                     current = Integer.parseInt(number);
+                    balance += current;
                 }else{
-                    current = -Integer.parseInt(number);
+                    current = Integer.parseInt(number);
+                    balance -= current;
                 }
-                textViewRead.setText(String.valueOf(current));
-                textViewBalance.setText(R.string.balance + String.valueOf(current));
 
-//                "2000&plus&sdf";
+
+                textViewRead.setText(String.valueOf(current));
+                String result = getResources().getString(R.string.balance) + String.valueOf(balance);
+                textViewBalance.setText(result);
+
             }
         }
     }

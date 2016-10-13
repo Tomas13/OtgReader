@@ -53,10 +53,8 @@ public class QrResultActivity extends AppCompatActivity {
     public void startTimer() {
         //set a new Timer
         timer = new Timer();
-
         //initialize the TimerTask's job
         initializeTimerTask();
-
         //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
         timer.schedule(timerTask, 5000, 5000); //
     }
@@ -79,7 +77,6 @@ public class QrResultActivity extends AppCompatActivity {
 
         timerTask = new TimerTask() {
             public void run() {
-
                 //use a handler to run a toast that shows the current timestamp
                 handler.post(new Runnable() {
                     public void run() {
