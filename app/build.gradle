@@ -35,4 +35,6 @@ dependencies {
     //qr code generator
     compile 'com.github.kenglxn.QRGen:javase:2.2.0'
     compile 'com.github.kenglxn.QRGen:android:2.2.0'
+
+    compile 'com.android.support:design:24.2.1'
 }

@@ -1,6 +1,7 @@
 package otgroup.kz.otgreader;
 
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,11 +44,18 @@ public class MainActivity extends AppCompatActivity {
     public void generatePositive(View view) {
         Intent intent = new Intent(this, QrResultActivity.class);
 
-        String timeStamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + "";
-        String fromThis = editTextSumm.getText() + "&plus&" + timeStamp;
-        intent.putExtra("QrBitmap", net.glxn.qrgen.android.QRCode.from(fromThis).bitmap());
-        intent.putExtra("Summ", editTextSumm.getText() + "&plus&");
-        startActivity(intent);
+        if (!editTextSumm.getText().toString().equals("")) {
+
+            String timeStamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + "";
+            String fromThis = editTextSumm.getText() + "&plus&" + timeStamp;
+            intent.putExtra("QrBitmap", net.glxn.qrgen.android.QRCode.from(fromThis).bitmap());
+            intent.putExtra("Summ", editTextSumm.getText() + "&plus&");
+            startActivity(intent);
+
+        } else {
+            Snackbar.make(textViewBalance, getResources().getString(R.string.enter_summ),
+                    Snackbar.LENGTH_LONG).show();
+        }
     }
 
 
@@ -55,11 +63,23 @@ public class MainActivity extends AppCompatActivity {
     public void generateNegative(View view) {
         Intent intent = new Intent(this, QrResultActivity.class);
 
-        String timeStamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + "";
-        String fromThis = editTextSumm.getText() + "&minus&"  + timeStamp;
-        intent.putExtra("QrBitmap", net.glxn.qrgen.android.QRCode.from(fromThis).bitmap());
-        intent.putExtra("Summ", editTextSumm.getText() + "&minus&");
-        startActivity(intent);
+        if (!editTextSumm.getText().toString().equals("")) {
+            int summ = Integer.parseInt(String.valueOf(editTextSumm.getText()));
+            if (balance >= summ) {
+                String timeStamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + "";
+                String fromThis = editTextSumm.getText() + "&minus&" + timeStamp;
+                intent.putExtra("QrBitmap", net.glxn.qrgen.android.QRCode.from(fromThis).bitmap());
+                intent.putExtra("Summ", editTextSumm.getText() + "&minus&");
+                startActivity(intent);
+            } else {
+                Snackbar.make(textViewBalance, getResources().getString(R.string.not_enough_balance),
+                        Snackbar.LENGTH_LONG).show();
+            }
+
+        } else {
+            Snackbar.make(textViewBalance, getResources().getString(R.string.enter_summ),
+                    Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -92,10 +112,17 @@ public class MainActivity extends AppCompatActivity {
                 int current;
                 if (sign.equals("plus")) {
                     current = Integer.parseInt(number);
-                    balance += current;
-                }else{
+
+                    if (balance >= current){
+
+                        balance -= current;
+                    }else{
+                        Snackbar.make(textViewBalance, getResources().getString(R.string.not_enough_balance),
+                                Snackbar.LENGTH_LONG).show();
+                    }
+                } else {
                     current = Integer.parseInt(number);
-                    balance -= current;
+                    balance += current;
                 }
 
 
