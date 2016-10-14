@@ -6,6 +6,8 @@
 
     <uses-feature android:name="android.hardware.camera"/>
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,19 +17,32 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+            </intent-filter>-->
         </activity>
-        <activity android:name=".ScanActivity"
+        <activity
+            android:name=".ScanActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".QrResultActivity"
             android:screenOrientation="portrait">
             >
+        </activity>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="343c4b7cc7a42bbfddf19852ef4556ff617fbc61"/>
+
+        <activity android:name=".LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
     </application>
 

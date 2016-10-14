@@ -13,9 +13,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.digits.sdk.android.Digits;
 import com.google.zxing.Result;
 import com.google.zxing.qrcode.encoder.QRCode;
 
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
+import io.fabric.sdk.android.Fabric;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -24,6 +28,8 @@ import butterknife.OnClick;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class MainActivity extends AppCompatActivity {
+
+
     String TAG = "MainAc";
     static final int SCAN_QR_REQUEST = 1;  // The request code
 
@@ -115,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         textViewBalance.append(" " + balance);
