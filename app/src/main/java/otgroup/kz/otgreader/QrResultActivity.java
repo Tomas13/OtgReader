@@ -56,7 +56,7 @@ public class QrResultActivity extends AppCompatActivity {
         //initialize the TimerTask's job
         initializeTimerTask();
         //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
-        timer.schedule(timerTask, 5000, 5000); //
+        timer.schedule(timerTask, 1000, 3000); //
     }
 
     @Override

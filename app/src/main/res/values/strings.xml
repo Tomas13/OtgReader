@@ -7,4 +7,7 @@
     <string name="btn_scan">сканировать</string>
     <string name="balance">Ваш баланс:</string>
     <string name="not_enough_balance">НЕДОСТАТОЧНО БАЛАНСА</string>
+    <string name="success_minus">С баланса успешно списалось</string>
+    <string name="success_plus">Баланс успешно пополнен на</string>
+    <string name="ok">OK</string>
 </resources>

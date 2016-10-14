@@ -1,10 +1,13 @@
 package otgroup.kz.otgreader;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -40,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(new Intent(this, ScanActivity.class), SCAN_QR_REQUEST);
     }
 
-    @OnClick(R.id.btn_generate_qr_positive)
+  /*  @OnClick(R.id.btn_generate_qr_positive)
     public void generatePositive(View view) {
         Intent intent = new Intent(this, QrResultActivity.class);
 
@@ -53,11 +56,22 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
 
             balance += Integer.parseInt(editTextSumm.getText().toString());
-        } else {
-            Snackbar.make(textViewBalance, getResources().getString(R.string.enter_summ),
+
+            Snackbar.make(textViewBalance, getResources().getString(R.string.success_plus) +
+                    " " + editTextSumm.getText().toString() + " у.е.",
                     Snackbar.LENGTH_LONG).show();
+        } else {
+//            Snackbar.make(textViewBalance, getResources().getString(R.string.enter_summ),
+//                    Snackbar.LENGTH_LONG).show();
+
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getResources().getString(R.string.enter_summ),
+                    Toast.LENGTH_SHORT);
+
+            toast.setGravity(Gravity.TOP|Gravity.CENTER, 0, 0);
+            toast.show();
         }
-    }
+    }*/
 
 
     @OnClick(R.id.btn_generate_qr_negative)
@@ -73,16 +87,28 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("Summ", editTextSumm.getText() + "&minus&");
                 startActivity(intent);
 
-                balance -= Integer.parseInt(editTextSumm.getText().toString());
 
-            } else {
-                Snackbar.make(textViewBalance, getResources().getString(R.string.not_enough_balance),
+                balance -= Integer.parseInt(editTextSumm.getText().toString());
+                Snackbar.make(textViewBalance, getResources().getString(R.string.success_minus) + " " +
+                                editTextSumm.getText().toString() + " тенге",
                         Snackbar.LENGTH_LONG).show();
+            } else {
+
+                Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.not_enough_balance),
+                        Toast.LENGTH_SHORT);
+
+                toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 0);
+                toast.show();
             }
 
         } else {
-            Snackbar.make(textViewBalance, getResources().getString(R.string.enter_summ),
-                    Snackbar.LENGTH_LONG).show();
+
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getResources().getString(R.string.enter_summ),
+                    Toast.LENGTH_SHORT);
+
+            toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 0);
+            toast.show();
         }
     }
 
@@ -125,16 +151,44 @@ public class MainActivity extends AppCompatActivity {
                 if (sign.equals("plus")) {
                     current = Integer.parseInt(number);
 
-                    if (balance >= current){
+                    if (balance >= current) {
 
                         balance -= current;
-                    }else{
-                        Snackbar.make(textViewBalance, getResources().getString(R.string.not_enough_balance),
-                                Snackbar.LENGTH_LONG).show();
+                    } else {
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                getResources().getString(R.string.not_enough_balance),
+                                Toast.LENGTH_LONG);
+
+                        toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 0);
+                        toast.show();
+//                        Snackbar.make(textViewBalance, getResources().getString(R.string.not_enough_balance),
+//                                Snackbar.LENGTH_LONG).show();
                     }
                 } else {
                     current = Integer.parseInt(number);
                     balance += current;
+
+                    // 1. Instantiate an AlertDialog.Builder with its constructor
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                    // 2. Chain together various setter methods to set the dialog characteristics
+                    builder.setMessage("Ваш баланс пополнен на " + current + " тенге");
+//                            .setTitle(R.string.dialog_title);
+
+                    // 3. Get the AlertDialog from create()
+
+
+
+                    // Add the buttons
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User clicked OK button
+                            dialog.cancel();
+                        }
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 }
 
 

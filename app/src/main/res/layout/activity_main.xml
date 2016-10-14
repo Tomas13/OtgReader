@@ -49,18 +49,18 @@
                 android:padding="2dp"
                 android:weightSum="2">
 
-                <Button
-                    android:id="@+id/btn_generate_qr_positive"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="@string/add_summ"/>
+                <!--<Button-->
+                    <!--android:id="@+id/btn_generate_qr_positive"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="50dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="@string/add_summ"/>-->
 
                 <Button
                     android:id="@+id/btn_generate_qr_negative"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="@string/minus_summ"/>
 
             </LinearLayout>
@@ -73,6 +73,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/text_view_read"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
