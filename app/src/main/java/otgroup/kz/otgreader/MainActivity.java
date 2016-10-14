@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("Summ", editTextSumm.getText() + "&plus&");
             startActivity(intent);
 
+            balance += Integer.parseInt(editTextSumm.getText().toString());
         } else {
             Snackbar.make(textViewBalance, getResources().getString(R.string.enter_summ),
                     Snackbar.LENGTH_LONG).show();
@@ -71,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("QrBitmap", net.glxn.qrgen.android.QRCode.from(fromThis).bitmap());
                 intent.putExtra("Summ", editTextSumm.getText() + "&minus&");
                 startActivity(intent);
+
+                balance -= Integer.parseInt(editTextSumm.getText().toString());
+
             } else {
                 Snackbar.make(textViewBalance, getResources().getString(R.string.not_enough_balance),
                         Snackbar.LENGTH_LONG).show();
@@ -93,6 +97,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String result = getResources().getString(R.string.balance) + String.valueOf(balance);
+        textViewBalance.setText(result);
+
     }
 
     @Override
