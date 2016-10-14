@@ -33,23 +33,25 @@ public class LoginActivity extends AppCompatActivity {
 
         if (Digits.getActiveSession() != null) {
             if (Digits.getActiveSession().isValidUser()) {
-//                Toast.makeText(this, "SINGED IN", Toast.LENGTH_SHORT).show();
 
+                //Singed in
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
             }
-        } else {
+        }
+
+//        else {
 //            Toast.makeText(this, "ActiveSession is null", Toast.LENGTH_SHORT).show();
 
-        }
+//        }
 
         AuthCallback authCallback = new AuthCallback() {
             @Override
             public void success(DigitsSession session, String phoneNumber) {
                 // TODO: associate the session userID with your user model
-                Toast.makeText(getApplicationContext(), "Авторизация успешна для for "
+                Toast.makeText(getApplicationContext(), "Авторизация успешна для  "
                         + phoneNumber, Toast.LENGTH_LONG).show();
 
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -62,8 +64,8 @@ public class LoginActivity extends AppCompatActivity {
         };
 
 
-
         DigitsAuthButton digitsButton = (DigitsAuthButton) findViewById(R.id.auth_button);
+        digitsButton.setText("Зарегистрироваться");
         digitsButton.setCallback(authCallback);
 
     }

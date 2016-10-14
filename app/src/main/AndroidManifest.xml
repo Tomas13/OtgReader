@@ -37,7 +37,9 @@
             android:name="io.fabric.ApiKey"
             android:value="343c4b7cc7a42bbfddf19852ef4556ff617fbc61"/>
 
-        <activity android:name=".LoginActivity">
+        <activity
+            android:name=".LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
