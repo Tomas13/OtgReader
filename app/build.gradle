@@ -22,9 +22,26 @@ android {
         applicationId "otgroup.kz.otgreader"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        // It's not necessary to specify, but I like to keep the debug keystore
+        // in SCM so all our debug builds (on all workstations) use the same
+        // key for convenience
+        debug {
+            storeFile file("../NmpsKey.jks")
+            storePassword "123456"
+            keyAlias "NMPS"
+            keyPassword "123456"
+        }
+        release {
+            storeFile file("../NmpsKey.jks")
+            storePassword "123456"
+            keyAlias "NMPS"
+            keyPassword "123456"
+        }
     }
     buildTypes {
         release {
