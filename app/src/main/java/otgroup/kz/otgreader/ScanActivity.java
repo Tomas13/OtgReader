@@ -23,39 +23,7 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
         super.onCreate(savedInstanceState);
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
         setContentView(mScannerView);
-
-
     }
-
-
-
-   /* @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    Toast.makeText(this, "Permission is granted", Toast.LENGTH_SHORT).show();
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                } else {
-
-                    Toast.makeText(this, "Permission is denied", Toast.LENGTH_SHORT).show();
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
-    }*/
 
 
     @Override
