@@ -4,6 +4,9 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +21,13 @@ import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
+import be.tarsos.dsp.AudioDispatcher;
+import be.tarsos.dsp.AudioEvent;
+import be.tarsos.dsp.AudioProcessor;
+import be.tarsos.dsp.io.android.AudioDispatcherFactory;
+import be.tarsos.dsp.pitch.PitchDetectionHandler;
+import be.tarsos.dsp.pitch.PitchDetectionResult;
+import be.tarsos.dsp.pitch.PitchProcessor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -43,6 +53,29 @@ public class MainActivity extends AppCompatActivity {
     public void scan(View view) {
         startActivityForResult(new Intent(this, ScanActivity.class), SCAN_QR_REQUEST);
     }
+
+    private AudioTrack generateTone(double freqHz, int durationMs) {
+        int count = (int) (44100.0 * 2.0 * (durationMs / 1000.0)) & ~1;
+        short[] samples = new short[count];
+        for (int i = 0; i < count; i += 2) {
+            short sample = (short) (Math.sin(2 * Math.PI * i / (44100.0 / freqHz)) * 0x7FFF);
+            samples[i + 0] = sample;
+            samples[i + 1] = sample;
+        }
+        AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC, 44100,
+                AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT,
+                count * (Short.SIZE / 8), AudioTrack.MODE_STATIC);
+        track.write(samples, 0, count);
+        return track;
+    }
+
+
+    @OnClick(R.id.btn_generate_qr_positive)
+    public void generateSound(View view) {
+        AudioTrack track = generateTone(17000, 250);
+        track.play();
+    }
+
 
   /*  @OnClick(R.id.btn_generate_qr_positive)
     public void generatePositive(View view) {
@@ -151,6 +184,11 @@ public class MainActivity extends AppCompatActivity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
 
+                //make a 17kHz sound
+                AudioTrack track = generateTone(17000, 250);
+                track.play();
+
+
                 String resultString = data.getExtras().get("summ").toString();
 
                 String[] resultArray = resultString.split("&");
@@ -187,7 +225,6 @@ public class MainActivity extends AppCompatActivity {
 //                            .setTitle(R.string.dialog_title);
 
                     // 3. Get the AlertDialog from create()
-
 
 
                     // Add the buttons
