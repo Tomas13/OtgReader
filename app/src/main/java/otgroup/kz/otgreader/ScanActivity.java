@@ -14,7 +14,9 @@ import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class ScanActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
+import static android.app.Activity.RESULT_OK;
+
+public class ScanActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler{
     private ZXingScannerView mScannerView;
     String TAG = "Scan";
 

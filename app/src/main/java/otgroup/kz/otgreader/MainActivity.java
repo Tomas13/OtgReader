@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -21,13 +22,6 @@ import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
-import be.tarsos.dsp.AudioDispatcher;
-import be.tarsos.dsp.AudioEvent;
-import be.tarsos.dsp.AudioProcessor;
-import be.tarsos.dsp.io.android.AudioDispatcherFactory;
-import be.tarsos.dsp.pitch.PitchDetectionHandler;
-import be.tarsos.dsp.pitch.PitchDetectionResult;
-import be.tarsos.dsp.pitch.PitchProcessor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -35,6 +29,7 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity {
 
 
+    private static final int SCAN_RESULT = 2;
     String TAG = "MainAc";
     static final int SCAN_QR_REQUEST = 1;  // The request code
 
@@ -119,13 +114,13 @@ public class MainActivity extends AppCompatActivity {
                 String fromThis = editTextSumm.getText() + "&minus&" + timeStamp;
                 intent.putExtra("QrBitmap", net.glxn.qrgen.android.QRCode.from(fromThis).bitmap());
                 intent.putExtra("Summ", editTextSumm.getText() + "&minus&");
-                startActivity(intent);
+                startActivityForResult(intent, SCAN_RESULT);
 
 
-                balance -= Integer.parseInt(editTextSumm.getText().toString());
+                /*balance -= Integer.parseInt(editTextSumm.getText().toString());
                 Snackbar.make(textViewBalance, getResources().getString(R.string.success_minus) + " " +
                                 editTextSumm.getText().toString() + " тенге",
-                        Snackbar.LENGTH_LONG).show();
+                        Snackbar.LENGTH_LONG).show();*/
             } else {
 
                 Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.not_enough_balance),
@@ -180,6 +175,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
+        if (requestCode == SCAN_RESULT){
+            if (resultCode == RESULT_OK){
+                balance -= Integer.parseInt(editTextSumm.getText().toString());
+                Snackbar.make(textViewBalance, getResources().getString(R.string.success_minus) + " " +
+                                editTextSumm.getText().toString() + " тенге",
+                        Snackbar.LENGTH_LONG).show();
+            }
+        }
         if (requestCode == SCAN_QR_REQUEST) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {

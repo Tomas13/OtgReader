@@ -4,8 +4,10 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -14,10 +16,18 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import be.tarsos.dsp.AudioDispatcher;
+import be.tarsos.dsp.AudioEvent;
+import be.tarsos.dsp.AudioProcessor;
+import be.tarsos.dsp.io.android.AudioDispatcherFactory;
+import be.tarsos.dsp.pitch.PitchDetectionHandler;
+import be.tarsos.dsp.pitch.PitchDetectionResult;
+import be.tarsos.dsp.pitch.PitchProcessor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class QrResultActivity extends AppCompatActivity {
+    private static final String TAG = QrResultActivity.class.getSimpleName();
 
     Timer timer;
     TimerTask timerTask;
@@ -40,6 +50,7 @@ public class QrResultActivity extends AppCompatActivity {
         imageViewQrResult.setImageBitmap(bitmap);
 
         summ = getIntent().getExtras().getString("Summ");
+        pitchDetection();
     }
 
     @Override
@@ -98,5 +109,33 @@ public class QrResultActivity extends AppCompatActivity {
                 });
             }
         };
+    }
+
+    private void pitchDetection() {
+        AudioDispatcher dispatcher = AudioDispatcherFactory.fromDefaultMicrophone(18000,1024,0);
+
+        PitchDetectionHandler pdh = new PitchDetectionHandler() {
+            @Override
+            public void handlePitch(PitchDetectionResult pitchDetectionResult, AudioEvent audioEvent) {
+                if(pitchDetectionResult.getPitch() != -1){
+                    double timeStamp = audioEvent.getTimeStamp();
+                    float pitch = pitchDetectionResult.getPitch();
+                    float probability = pitchDetectionResult.getProbability();
+                    double rms = audioEvent.getRMS() * 100;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+                    });
+                    String message = String.format("Pitch detected at %.2fs: %.2fHz ( %.2f probability, RMS: %.5f )\n", timeStamp,pitch,probability,rms);
+                    Log.d("GOGOGOGO", "Get my money!");
+                }
+            }
+        };
+        AudioProcessor p = new PitchProcessor(PitchProcessor.PitchEstimationAlgorithm.YIN, 18000, 1024, pdh);
+        dispatcher.addAudioProcessor(p);
+        new Thread(dispatcher,"Audio Dispatcher").start();
     }
 }
