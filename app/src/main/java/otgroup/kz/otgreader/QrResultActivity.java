@@ -28,6 +28,7 @@ import butterknife.ButterKnife;
 
 public class QrResultActivity extends AppCompatActivity {
     private static final String TAG = QrResultActivity.class.getSimpleName();
+    private static final int FREQ = 5000;
 
     Timer timer;
     TimerTask timerTask;
@@ -112,29 +113,32 @@ public class QrResultActivity extends AppCompatActivity {
     }
 
     private void pitchDetection() {
-        AudioDispatcher dispatcher = AudioDispatcherFactory.fromDefaultMicrophone(18000,1024,0);
+        final AudioDispatcher dispatcher = AudioDispatcherFactory.fromDefaultMicrophone(22050,1024,0);
 
         PitchDetectionHandler pdh = new PitchDetectionHandler() {
             @Override
             public void handlePitch(PitchDetectionResult pitchDetectionResult, AudioEvent audioEvent) {
                 if(pitchDetectionResult.getPitch() != -1){
-                    double timeStamp = audioEvent.getTimeStamp();
-                    float pitch = pitchDetectionResult.getPitch();
-                    float probability = pitchDetectionResult.getProbability();
-                    double rms = audioEvent.getRMS() * 100;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setResult(RESULT_OK);
-                            finish();
-                        }
-                    });
-                    String message = String.format("Pitch detected at %.2fs: %.2fHz ( %.2f probability, RMS: %.5f )\n", timeStamp,pitch,probability,rms);
-                    Log.d("GOGOGOGO", "Get my money!");
+                    if (pitchDetectionResult.getPitch() >= 11200 && pitchDetectionResult.getPitch() <= 11600) {
+                        double timeStamp = audioEvent.getTimeStamp();
+                        float pitch = pitchDetectionResult.getPitch();
+                        float probability = pitchDetectionResult.getProbability();
+                        double rms = audioEvent.getRMS() * 100;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                dispatcher.stop();
+                                setResult(RESULT_OK);
+                                finish();
+                            }
+                        });
+                        String message = String.format("Pitch detected at %.2fs: %.2fHz ( %.2f probability, RMS: %.5f )\n", timeStamp, pitch, probability, rms);
+                        Log.d("GOGOGOGO", message);
+                    }
                 }
             }
         };
-        AudioProcessor p = new PitchProcessor(PitchProcessor.PitchEstimationAlgorithm.YIN, 18000, 1024, pdh);
+        AudioProcessor p = new PitchProcessor(PitchProcessor.PitchEstimationAlgorithm.FFT_YIN, 22050, 1024, pdh);
         dispatcher.addAudioProcessor(p);
         new Thread(dispatcher,"Audio Dispatcher").start();
     }

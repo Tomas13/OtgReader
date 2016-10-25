@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static final int SCAN_RESULT = 2;
+    private static final double FREQ = 17000;
     String TAG = "MainAc";
     static final int SCAN_QR_REQUEST = 1;  // The request code
 
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_generate_qr_positive)
     public void generateSound(View view) {
-        AudioTrack track = generateTone(17000, 250);
+        AudioTrack track = generateTone(FREQ, 500);
         track.play();
     }
 
@@ -188,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
 
                 //make a 17kHz sound
-                AudioTrack track = generateTone(17000, 250);
+                AudioTrack track = generateTone(FREQ, 250);
                 track.play();
 
 
