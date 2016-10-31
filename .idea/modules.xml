@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/FFTLibrary/FFTLibrary.iml" filepath="$PROJECT_DIR$/FFTLibrary/FFTLibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/OtgReader.iml" filepath="$PROJECT_DIR$/OtgReader.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             samples[i + 1] = sample;
         }
         AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC, 44100,
-                AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT,
+                AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT,
                 count * (Short.SIZE / 8), AudioTrack.MODE_STATIC);
         track.write(samples, 0, count);
         return track;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_generate_qr_positive)
     public void generateSound(View view) {
-        AudioTrack track = generateTone(FREQ, 500);
+        AudioTrack track = generateTone(FREQ, 2000);
         track.play();
     }
 
