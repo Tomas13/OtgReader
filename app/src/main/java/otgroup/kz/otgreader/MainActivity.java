@@ -47,8 +47,24 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_scan)
     public void scan(View view) {
-        startActivityForResult(new Intent(this, ScanActivity.class), SCAN_QR_REQUEST);
+        openScanActivity();
     }
+
+
+    public void openScanActivity() {
+        //get permissions
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    1);
+            return;
+        }
+
+        startActivityForResult(new Intent(this, ScanActivity.class), SCAN_QR_REQUEST);
+
+    }
+
 
     private AudioTrack generateTone(double freqHz, int durationMs) {
         int count = (int) (44100.0 * 2.0 * (durationMs / 1000.0)) & ~1;
@@ -66,80 +82,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @OnClick(R.id.btn_generate_qr_positive)
-    public void generateSound(View view) {
-        AudioTrack track = generateTone(FREQ, 500);
-        track.play();
-    }
-
-
-  /*  @OnClick(R.id.btn_generate_qr_positive)
-    public void generatePositive(View view) {
-        Intent intent = new Intent(this, QrResultActivity.class);
-
-        if (!editTextSumm.getText().toString().equals("")) {
-
-            String timeStamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + "";
-            String fromThis = editTextSumm.getText() + "&plus&" + timeStamp;
-            intent.putExtra("QrBitmap", net.glxn.qrgen.android.QRCode.from(fromThis).bitmap());
-            intent.putExtra("Summ", editTextSumm.getText() + "&plus&");
-            startActivity(intent);
-
-            balance += Integer.parseInt(editTextSumm.getText().toString());
-
-            Snackbar.make(textViewBalance, getResources().getString(R.string.success_plus) +
-                    " " + editTextSumm.getText().toString() + " у.е.",
-                    Snackbar.LENGTH_LONG).show();
-        } else {
-//            Snackbar.make(textViewBalance, getResources().getString(R.string.enter_summ),
-//                    Snackbar.LENGTH_LONG).show();
-
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    getResources().getString(R.string.enter_summ),
-                    Toast.LENGTH_SHORT);
-
-            toast.setGravity(Gravity.TOP|Gravity.CENTER, 0, 0);
-            toast.show();
-        }
-    }*/
-
-
     @OnClick(R.id.btn_generate_qr_negative)
     public void generateNegative(View view) {
-        Intent intent = new Intent(this, QrResultActivity.class);
 
-        if (!editTextSumm.getText().toString().equals("")) {
-            int summ = Integer.parseInt(String.valueOf(editTextSumm.getText()));
-            if (balance >= summ) {
-                String timeStamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + "";
-                String fromThis = editTextSumm.getText() + "&minus&" + timeStamp;
-                intent.putExtra("QrBitmap", net.glxn.qrgen.android.QRCode.from(fromThis).bitmap());
-                intent.putExtra("Summ", editTextSumm.getText() + "&minus&");
-                startActivityForResult(intent, SCAN_RESULT);
+        generateSound();
 
 
-                /*balance -= Integer.parseInt(editTextSumm.getText().toString());
-                Snackbar.make(textViewBalance, getResources().getString(R.string.success_minus) + " " +
-                                editTextSumm.getText().toString() + " тенге",
-                        Snackbar.LENGTH_LONG).show();*/
-            } else {
 
-                Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.not_enough_balance),
-                        Toast.LENGTH_SHORT);
-
-                toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 0);
-                toast.show();
-            }
-
-        } else {
-
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    getResources().getString(R.string.enter_summ),
-                    Toast.LENGTH_SHORT);
-
-            toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 0);
-            toast.show();
-        }
     }
 
     @Override
@@ -149,15 +98,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         textViewBalance.append(" " + balance);
-
-
-        //get permissions
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA},
-                    1);
-        }
     }
 
     @Override
@@ -176,8 +116,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
-        if (requestCode == SCAN_RESULT){
-            if (resultCode == RESULT_OK){
+        if (requestCode == SCAN_RESULT) {
+            if (resultCode == RESULT_OK) {
                 balance -= Integer.parseInt(editTextSumm.getText().toString());
                 Snackbar.make(textViewBalance, getResources().getString(R.string.success_minus) + " " +
                                 editTextSumm.getText().toString() + " тенге",
@@ -188,9 +128,12 @@ public class MainActivity extends AppCompatActivity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
 
+
+
                 //make a 17kHz sound
-                AudioTrack track = generateTone(FREQ, 250);
+                AudioTrack track = generateTone(17000, 500);
                 track.play();
+
 
 
                 String resultString = data.getExtras().get("summ").toString();
@@ -253,9 +196,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void generateSound() {
+
+        //get permissions
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    2);
+            return;
+        }
+
+        Intent intent = new Intent(this, QrResultActivity.class);
+        if (!editTextSumm.getText().toString().equals("")) {
+            int summ = Integer.parseInt(String.valueOf(editTextSumm.getText()));
+            if (balance >= summ) {
+                String timeStamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + "";
+                String fromThis = editTextSumm.getText() + "&minus&" + timeStamp;
+                intent.putExtra("QrBitmap", net.glxn.qrgen.android.QRCode.from(fromThis).bitmap());
+                intent.putExtra("Summ", editTextSumm.getText() + "&minus&");
+                startActivityForResult(intent, SCAN_RESULT);
+
+            } else {
+
+                Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.not_enough_balance),
+                        Toast.LENGTH_SHORT);
+
+                toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+
+        } else {
+
+            Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.enter_summ),
+                    Toast.LENGTH_SHORT);
+
+            toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 0);
+            toast.show();
+        }
+
+    }
 
 
-   /* @Override
+    @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case 1: {
@@ -263,14 +246,35 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    Toast.makeText(this, "Permission is granted", Toast.LENGTH_SHORT).show();
+                    openScanActivity();
+                    Toast.makeText(this, "Permission  CAMERA is granted", Toast.LENGTH_SHORT).show();
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 
                 } else {
 
-                    Toast.makeText(this, "Permission is denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Permission CAMERA is denied", Toast.LENGTH_SHORT).show();
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            case 2: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    generateSound();
+                    Toast.makeText(this, "Permission AUDIO is granted", Toast.LENGTH_SHORT).show();
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    Toast.makeText(this, "Permission AUDIO is denied", Toast.LENGTH_SHORT).show();
 
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
@@ -281,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
             // other 'case' lines to check for other
             // permissions this app might request
         }
-    }*/
+    }
 
 
 }
