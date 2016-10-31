@@ -1,12 +1,17 @@
 package otgroup.kz.otgreader;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +25,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -84,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_generate_qr_negative)
     public void generateNegative(View view) {
+//        number(getApplicationContext());
 
         generateSound();
 
@@ -98,6 +105,36 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         textViewBalance.append(" " + balance);
+
+
+//        number(getApplicationContext());
+    }
+
+
+    public void number(Context ctx) {
+        AssetManager am;
+        try {
+            am = ctx.getAssets();
+            AssetFileDescriptor afd = am.openFd("sound.wav");
+            MediaPlayer player = new MediaPlayer();
+            player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(),
+                    afd.getLength()/2);
+            player.prepare();
+            player.start();
+            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    // TODO Auto-generated method stub
+                    mp.release();
+                }
+
+            });
+            player.setLooping(false);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -130,9 +167,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+                number(getApplicationContext());
+
                 //make a 17kHz sound
-                AudioTrack track = generateTone(17000, 500);
-                track.play();
+//                AudioTrack track = generateTone(17000, 2000);
+//                track.play();
 
 
 
