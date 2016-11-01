@@ -7,17 +7,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
-import android.media.AudioFormat;
-import android.media.AudioManager;
-import android.media.AudioTrack;
 import android.media.MediaPlayer;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -33,10 +28,7 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
-
     private static final int SCAN_RESULT = 2;
-    private static final double FREQ = 17000;
-    String TAG = "MainAc";
     static final int SCAN_QR_REQUEST = 1;  // The request code
 
     private int balance = 1000;
@@ -84,13 +76,6 @@ public class MainActivity extends AppCompatActivity {
         textViewBalance.append(" " + balance);
 
 
-        //get permissions
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA},
-                    1);
-        }
     }
 
     @Override
