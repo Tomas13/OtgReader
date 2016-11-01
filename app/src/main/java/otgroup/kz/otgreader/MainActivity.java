@@ -52,28 +52,14 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_scan)
     public void scan(View view) {
-        openScanActivity();
-    }
-
-
-    public void openScanActivity() {
-        //get permissions
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA},
-                    1);
-            return;
-        }
-
         startActivityForResult(new Intent(this, ScanActivity.class), SCAN_QR_REQUEST);
-
     }
 
     @OnClick(R.id.btn_generate_qr_negative)
     public void generateNegative(View view) {
         generateSound();
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +69,14 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         textViewBalance.append(" " + balance);
 
+
+        //get permissions
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    1);
+        }
     }
 
     @Override
@@ -101,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
-        if (requestCode == SCAN_RESULT) {
-            if (resultCode == RESULT_OK) {
+        if (requestCode == SCAN_RESULT){
+            if (resultCode == RESULT_OK){
                 balance -= Integer.parseInt(editTextSumm.getText().toString());
 
                 // 1. Instantiate an AlertDialog.Builder with its constructor
@@ -134,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
 
                 number(getApplicationContext());
-
 
                 String resultString = data.getExtras().get("summ").toString();
 
@@ -234,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
+   /* @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case 1: {
@@ -242,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+<<<<<<< HEAD
                     openScanActivity();
 //                    Toast.makeText(this, "Permission  CAMERA is granted", Toast.LENGTH_SHORT).show();
 
@@ -264,13 +258,20 @@ public class MainActivity extends AppCompatActivity {
 
                     generateSound();
 //                    Toast.makeText(this, "Permission AUDIO is granted", Toast.LENGTH_SHORT).show();
+=======
+                    Toast.makeText(this, "Permission is granted", Toast.LENGTH_SHORT).show();
+>>>>>>> 9203c72f447aeed4fef9ed06237b63bc1c11bc6a
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 
                 } else {
 
+<<<<<<< HEAD
 //                    Toast.makeText(this, "Permission AUDIO is denied", Toast.LENGTH_SHORT).show();
+=======
+                    Toast.makeText(this, "Permission is denied", Toast.LENGTH_SHORT).show();
+>>>>>>> 9203c72f447aeed4fef9ed06237b63bc1c11bc6a
 
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
@@ -281,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
             // other 'case' lines to check for other
             // permissions this app might request
         }
-    }
+    }*/
 
     public void number(Context ctx) {
         AssetManager am;
