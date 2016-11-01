@@ -11,7 +11,6 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -71,31 +70,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    private AudioTrack generateTone(double freqHz, int durationMs) {
-        int count = (int) (44100.0 * 2.0 * (durationMs / 1000.0)) & ~1;
-        short[] samples = new short[count];
-        for (int i = 0; i < count; i += 2) {
-            short sample = (short) (Math.sin(2 * Math.PI * i / (44100.0 / freqHz)) * 0x7FFF);
-            samples[i + 0] = sample;
-            samples[i + 1] = sample;
-        }
-        AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC, 44100,
-                AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT,
-                count * (Short.SIZE / 8), AudioTrack.MODE_STATIC);
-        track.write(samples, 0, count);
-        return track;
-    }
-
-
     @OnClick(R.id.btn_generate_qr_negative)
     public void generateNegative(View view) {
-//        number(getApplicationContext());
-
         generateSound();
-
-
-
     }
 
     @Override
@@ -106,35 +83,6 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         textViewBalance.append(" " + balance);
 
-
-//        number(getApplicationContext());
-    }
-
-
-    public void number(Context ctx) {
-        AssetManager am;
-        try {
-            am = ctx.getAssets();
-            AssetFileDescriptor afd = am.openFd("sound.wav");
-            MediaPlayer player = new MediaPlayer();
-            player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(),
-                    afd.getLength()/2);
-            player.prepare();
-            player.start();
-            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    // TODO Auto-generated method stub
-                    mp.release();
-                }
-
-            });
-            player.setLooping(false);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -156,23 +104,36 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == SCAN_RESULT) {
             if (resultCode == RESULT_OK) {
                 balance -= Integer.parseInt(editTextSumm.getText().toString());
-                Snackbar.make(textViewBalance, getResources().getString(R.string.success_minus) + " " +
-                                editTextSumm.getText().toString() + " тенге",
-                        Snackbar.LENGTH_LONG).show();
+
+                // 1. Instantiate an AlertDialog.Builder with its constructor
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                // 2. Chain together various setter methods to set the dialog characteristics
+                builder.setMessage(getResources().getString(R.string.success_minus) + " " +
+                        editTextSumm.getText().toString() + " тенге");
+//                            .setTitle(R.string.dialog_title);
+                // 3. Get the AlertDialog from create()
+                // Add the buttons
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK button
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+//                Snackbar.make(textViewBalance, getResources().getString(R.string.success_minus) + " " +
+//                                editTextSumm.getText().toString() + " тенге",
+//                        Snackbar.LENGTH_LONG).show();
             }
         }
         if (requestCode == SCAN_QR_REQUEST) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
 
-
-
                 number(getApplicationContext());
-
-                //make a 17kHz sound
-//                AudioTrack track = generateTone(17000, 2000);
-//                track.play();
-
 
 
                 String resultString = data.getExtras().get("summ").toString();
@@ -209,10 +170,7 @@ public class MainActivity extends AppCompatActivity {
                     // 2. Chain together various setter methods to set the dialog characteristics
                     builder.setMessage("Ваш баланс пополнен на " + current + " тенге");
 //                            .setTitle(R.string.dialog_title);
-
                     // 3. Get the AlertDialog from create()
-
-
                     // Add the buttons
                     builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -224,7 +182,6 @@ public class MainActivity extends AppCompatActivity {
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 }
-
 
                 textViewRead.setText(String.valueOf(current));
                 String result = getResources().getString(R.string.balance) + String.valueOf(balance);
@@ -286,14 +243,14 @@ public class MainActivity extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     openScanActivity();
-                    Toast.makeText(this, "Permission  CAMERA is granted", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, "Permission  CAMERA is granted", Toast.LENGTH_SHORT).show();
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 
                 } else {
 
-                    Toast.makeText(this, "Permission CAMERA is denied", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, "Permission CAMERA is denied", Toast.LENGTH_SHORT).show();
 
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
@@ -306,14 +263,14 @@ public class MainActivity extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     generateSound();
-                    Toast.makeText(this, "Permission AUDIO is granted", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, "Permission AUDIO is granted", Toast.LENGTH_SHORT).show();
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 
                 } else {
 
-                    Toast.makeText(this, "Permission AUDIO is denied", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, "Permission AUDIO is denied", Toast.LENGTH_SHORT).show();
 
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
@@ -326,5 +283,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void number(Context ctx) {
+        AssetManager am;
+        try {
+            am = ctx.getAssets();
+            AssetFileDescriptor afd = am.openFd("sound.wav");
+            MediaPlayer player = new MediaPlayer();
+            player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(),
+                    afd.getLength() / 2);
+            player.prepare();
+            player.start();
+            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    // TODO Auto-generated method stub
+                    mp.release();
+                }
+
+            });
+            player.setLooping(false);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }
