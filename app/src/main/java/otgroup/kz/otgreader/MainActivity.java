@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -126,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
 
-                number(getApplicationContext());
+
+                makeHighSound(getApplicationContext());
 
                 String resultString = data.getExtras().get("summ").toString();
 
@@ -275,7 +277,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void number(Context ctx) {
+    public void makeHighSound(Context ctx) {
+
+        //it'll increase volume up to 70 under any circumstances
+        AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+//                int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
+//        int currentVolume = 60;
+        int maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        float percent = 0.7f;
+        int seventyVolume = (int) (maxVolume*percent);
+        audio.setStreamVolume(AudioManager.STREAM_MUSIC, seventyVolume, 0);
+
         AssetManager am;
         try {
             am = ctx.getAssets();
