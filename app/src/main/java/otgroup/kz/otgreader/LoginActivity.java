@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -22,7 +23,6 @@ public class LoginActivity extends AppCompatActivity {
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
     private static final String TWITTER_KEY = "NGXnkjoIQEqYs9jCt3nDs3ZKE";
     private static final String TWITTER_SECRET = "5dU0VGBklWqIVhrhw9YWuOoLVw7U3RWYMeqMbdTNNYDlsBbSN1";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +66,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
 
+        Button btnSkipAuth = (Button) findViewById(R.id.skip_auth);
+        btnSkipAuth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
 
         DigitsAuthButton digitsButton = (DigitsAuthButton) findViewById(R.id.auth_button);
         digitsButton.setText("Зарегистрироваться");

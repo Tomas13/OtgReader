@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         generateSound();
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,8 +74,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         textViewBalance.append(" " + balance);
-
-
     }
 
     @Override
@@ -89,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         String result = getResources().getString(R.string.balance) + String.valueOf(balance);
         textViewBalance.setText(result);
-
     }
 
     @Override
@@ -112,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked OK button
                         dialog.cancel();
+                        editTextSumm.setText("");
                     }
                 });
 
@@ -126,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == SCAN_QR_REQUEST) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-
 
                 makeHighSound(getApplicationContext());
 
@@ -176,18 +172,14 @@ public class MainActivity extends AppCompatActivity {
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 }
-
                 textViewRead.setText(String.valueOf(current));
                 String result = getResources().getString(R.string.balance) + String.valueOf(balance);
                 textViewBalance.setText(result);
-
             }
         }
     }
 
-
     public void generateSound() {
-
         //get permissions
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -236,17 +228,8 @@ public class MainActivity extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     openScanActivity();
-//                    Toast.makeText(this, "Permission  CAMERA is granted", Toast.LENGTH_SHORT).show();
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
                 } else {
-
 //                    Toast.makeText(this, "Permission CAMERA is denied", Toast.LENGTH_SHORT).show();
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
                 }
                 return;
             }
@@ -257,34 +240,22 @@ public class MainActivity extends AppCompatActivity {
 
                     generateSound();
 //                    Toast.makeText(this, "Permission AUDIO is granted", Toast.LENGTH_SHORT).show();
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
                 } else {
-
 //                    Toast.makeText(this, "Permission AUDIO is denied", Toast.LENGTH_SHORT).show();
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
                 }
                 return;
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 
 
     public void makeHighSound(Context ctx) {
-
-        //it'll increase volume up to 70 under any circumstances
+        //it'll increase volume up to 90 under any circumstances
         AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 //                int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
 //        int currentVolume = 60;
         int maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        float percent = 0.7f;
+        float percent = 0.9f;
         int seventyVolume = (int) (maxVolume*percent);
         audio.setStreamVolume(AudioManager.STREAM_MUSIC, seventyVolume, 0);
 
